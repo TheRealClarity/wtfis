@@ -1,0 +1,63 @@
+Disclaimer: WTFis Unfinished Jailbreak - Non-Responsibility for iPhone 
+Damage
+
+Please read the following disclaimer carefully before considering the use 
+of WTFis, an unfinished jailbreak tool. This disclaimer is intended to 
+outline the potential risks involved and clarify the user's 
+non-responsibility for any damage caused to iPhones when utilizing WTFis.
+
+1. Unfinished Jailbreak Tool:
+WTFis is an unfinished jailbreak tool designed to bypass software 
+restrictions on iPhones. It should be noted that WTFis is a work in 
+progress and may lack essential stability, compatibility, and security 
+features. As an unfinished tool, it is inherently prone to unexpected 
+errors, bugs, and compatibility issues with various iPhone models and 
+software versions.
+
+2. Risks and Consequences:
+By choosing to use WTFis, you acknowledge and accept the potential risks 
+associated with jailbreaking your iPhone. These risks may include, but are 
+not limited to:
+
+a) Loss of Warranty: Jailbreaking an iPhone typically voids the 
+manufacturer's warranty. Any damage or malfunction caused to the device 
+during or after the jailbreak process may not be covered under the 
+original warranty.
+
+b) Software Instability: WTFis, being unfinished, may result in software 
+instability, leading to device crashes, freezing, or unresponsiveness. 
+This instability can affect the overall performance and functionality of 
+your iPhone.
+
+c) Security Vulnerabilities: Jailbreaking can expose your device to 
+security vulnerabilities, making it more susceptible to malicious 
+software, unauthorized access, and potential data breaches. WTFis, being 
+unfinished, may not have implemented necessary security measures, further 
+increasing these risks.
+
+d) Incompatibility: WTFis may not be compatible with all iPhone models, 
+iOS versions, or third-party applications. Compatibility issues may cause 
+certain features or applications to malfunction or become inaccessible.
+
+3. User Responsibility:
+While WTFis is provided for informational purposes, it is crucial to 
+understand that the tool's development and usage are entirely at your own 
+risk. By proceeding with the jailbreaking process using WTFis, you assume 
+full responsibility for any consequences that may arise.
+
+4. Non-Responsibility for iPhone Damage:
+The creators, developers, and distributors of WTFis explicitly disclaim 
+any responsibility or liability for any damage, loss of data, malfunction, 
+or other negative outcomes resulting from the use of WTFis. You agree that 
+the use of WTFis is your own decision, and you will not hold any parties 
+associated with WTFis accountable for any adverse effects on your iPhone 
+or personal property.
+
+Conclusion:
+By proceeding to use WTFis, you acknowledge that it is an unfinished 
+jailbreak tool and understand the potential risks involved. You accept 
+full responsibility for any consequences that may arise from using WTFis 
+and agree not to hold any parties associated with WTFis responsible for 
+any damage to your iPhone or any related issues. It is recommended that 
+you exercise caution and make an informed decision before utilizing WTFis 
+or any other jailbreak tool.

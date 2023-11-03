@@ -1,0 +1,10 @@
+#!/bin/bash
+case "$1" in
+  upgrade)
+    exit 0
+  ;;
+  *)
+    echo "Refusing to remove this package as this action will render the device unbootable and possibly permanently unjailbreakable."
+    exit 1
+  ;;
+esac

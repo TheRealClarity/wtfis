@@ -1,0 +1,21 @@
+## User settings
+**/xcuserdata/
+**/xcshareddata/
+**/project.xcworkspace/
+
+## Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
+
+.DS_Store
+**/.DS_Store
+
+build/**
+Payload
+*.ipa
+*.deb
+
+untether/untether.tar
+untether/untether
+untether/wtfis/**
+untether/package/**

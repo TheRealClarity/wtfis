@@ -1,0 +1,11 @@
+Package: com.trc.wtfisuntether
+Priority: required
+Section: System
+Maintainer: TheRealClarity <therealclarity@proton.me>
+Architecture: iphoneos-arm
+Version: 0.1
+Depends: firmware (>= 8.0), firmware (<= 8.4.1)
+Description: wtfis untether
+Author: TheRealClarity <therealclarity@proton.me>
+Name: wtfis untether
+Conflicts: cy+cpu.arm, taiguntether83x, io.pangu.xuanyuansword8

@@ -1,0 +1,3 @@
+#!/bin/bash
+ls /etc/rc.d | while read exec; do /etc/rc.d/$exec; done
+exit 0
