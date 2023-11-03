@@ -1,0 +1,3 @@
+[submodule "submodules/daibutsu"]
+	path = submodules/daibutsu
+	url = https://github.com/TheRealClarity/daibutsu
