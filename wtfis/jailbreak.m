@@ -103,6 +103,7 @@ int check_bootstrap(void) {
         
         pid_t pd = 0;
         int status = 0;
+        // intended for a possible future update
         if (access("/.installed_wtfis", F_OK) != 0) {
             Log(@"[i] Bootstrapping...");
             chdir("/");
@@ -120,17 +121,21 @@ int check_bootstrap(void) {
             }
             Log(@"[i] Successufly bootstrapped.");
         }
+
         Log(@"[i] Untethering...");
-        
+
         char* untether_loc = "/wtfis/untether";
         char* untether_victim = "/usr/libexec/CrashHousekeeping";
-        if(rename(untether_victim ,"/usr/libexec/CrashHousekeeping_o") == 0) {
-            Log(@"[i] Renamed CrashHousekeeping.");
-        } else {
-            Log(@"[!] Failed renaming CrashHousekeeping...");
-            return -1;
-        }
         
+        if (access("/usr/libexec/CrashHousekeeping_o", F_OK) != 0) {
+            if (rename(untether_victim, "/usr/libexec/CrashHousekeeping_o") == 0) {
+                Log(@"[i] Renamed CrashHousekeeping.");
+            } else {
+                Log(@"[!] Failed renaming CrashHousekeeping...");
+                return -1;
+            }
+        }
+
         Log(@"[i] Installing untether...");
         
         const char* untether_path = [[execpath stringByAppendingPathComponent:@"untether.tar"] UTF8String];
@@ -222,14 +227,14 @@ int check_bootstrap(void) {
         NSString* untether_deb = [execpath stringByAppendingPathComponent:@"com.trc.wtfisuntether_iphoneos-arm.deb"];
         NSString* untether_deb_dst_path = @"/var/root/Media/Cydia/AutoInstall/com.trc.wtfisuntether_iphoneos-arm.deb";
         if (copyFile(untether_deb, untether_deb_dst_path) == 0) {
-            Log(@"[!] %@ not found at specified path.", untether_deb);
+            Log(@"[!] Failed to install %@", untether_deb);
         }
         
         //install our source
         NSString* cydia_source = [execpath stringByAppendingPathComponent:@"wtfis.list"];
         NSString* cydia_source_dest = @"/etc/apt/sources.list.d/wtfis.list";
         if (copyFile(cydia_source, cydia_source_dest) == 0) {
-            Log(@"[!] %@ not found at specified path.", cydia_source);
+            Log(@"[!] Failed to install %@ cydia source", cydia_source);
         }
         
         Log(@"[i] Done installing bootstrap.");
@@ -573,18 +578,6 @@ int jailbreak(mach_port_t tfp0, uint64_t slide, uint64_t our_task_addr) {
     kcall(patchfinderaddress(PFIND_ADDR_FLUSHCACHE), 1, 0, 0, 0, 0, 0, 0);
     
     Log(@"[i] ... done");
-    
-    //test fork
-    
-    int f = fork();
-    if (f == 0) {
-        exit(0);
-    }
-    waitpid(f, 0, 0);
-    
-    if(f < 0) {
-        return -1;
-    }
 #ifndef UNTETHER
     int cb = check_bootstrap();
     if(cb < 0) {
@@ -598,10 +591,7 @@ int jailbreak(mach_port_t tfp0, uint64_t slide, uint64_t our_task_addr) {
     waitpid(pid, 0, 0);
     posix_spawn(&pid, "/bin/launchctl", NULL, NULL, (char **)&(const char*[]){ "/bin/launchctl", "load", "/Library/NanoLaunchDaemons", NULL }, environ);
     waitpid(pid, 0, 0);
-#ifndef UNTETHER
-    //goodbye
-    posix_spawn(&pid, "/usr/bin/killall", NULL, NULL, (char **)&(const char*[]){ "/usr/bin/killall", "-9", "backboardd", NULL }, environ);
-    Log(@"Reloading SpringBoard...");
-#endif
+    posix_spawn(&pid, "/usr/libexec/CrashHouseKeeping_o", NULL, NULL, (char **)&(const char*[]){ "/usr/libexec/CrashHouseKeeping_o", NULL }, environ);
+    waitpid(pid, 0, 0);
     return 0;
 }
