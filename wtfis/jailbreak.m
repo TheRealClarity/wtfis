@@ -39,7 +39,7 @@ void print_addresses(uint64_t slide) {
     Log(@"[i]  ICHDB_1                                    = 0x%.16llX", patchfinderaddress(PFIND_ADDR_ICHDB_1) - slide);
     Log(@"[i]  ICHDB_2                                    = 0x%.16llX", patchfinderaddress(PFIND_ADDR_ICHDB_2) - slide);
     Log(@"[i]  MAPIO                                      = 0x%.16llX", patchfinderaddress(PFIND_ADDR_MAPIO) - slide);
-    Log(@"[i]  SB_TRACE                                   = 0x%.16llX", patchfinderaddress(PFIND_ADDR_SB_TRACE) - slide);
+    //Log(@"[i]  SB_TRACE                                   = 0x%.16llX", patchfinderaddress(PFIND_ADDR_SB_TRACE) - slide);
     
     Log(@"[i]  KERNEL_PMAP                                = 0x%.16llX", patchfinderaddress(PFIND_ADDR_KERNEL_PMAP) - slide);
     Log(@"[i]  PHYS_ADDR                                  = 0x%.16llX", patchfinderaddress(PFIND_ADDR_PHYS_ADDR) - slide);
@@ -69,8 +69,51 @@ int copyFile(NSString* src, NSString* dest) {
     return [[NSFileManager defaultManager] copyItemAtPath:src toPath:dest error:nil];
 }
 
+bool check_sbshowapp(void)
+{
+    NSDictionary* md = [[NSDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.apple.springboard.plist"];
+    BOOL keyState = [[md objectForKey:@"SBShowNonDefaultSystemApps"] boolValue];
+    if (keyState){
+        return true;
+    }
+    return false;
+}
+
+void add_sbshowapp(void)
+{
+    NSMutableDictionary* md = [[NSMutableDictionary alloc] initWithContentsOfFile:@"/var/mobile/Library/Preferences/com.apple.springboard.plist"];
+    [md setObject:[NSNumber numberWithBool:YES] forKey:@"SBShowNonDefaultSystemApps"];
+    [md writeToFile:@"/var/mobile/Library/Preferences/com.apple.springboard.plist" atomically:YES];
+    chown("/var/mobile/Library/Preferences/com.apple.springboard.plist", 501, 501);
+}
+
 int check_bootstrap(void) {
-    // bail if bootstap is already installed
+    if (!check_sbshowapp()) {
+        Log(@"[!] Updating SBShowNonDefaultApps...");
+        add_sbshowapp();
+        sync();
+        
+        pid_t pid = 0;
+        int exit_status;
+        
+        posix_spawn(&pid, "/usr/bin/killall", 0, 0, (char**)&(const char*[]){"/usr/bin/killall", "-9", "cfprefsd", NULL}, NULL);
+        waitpid(pid, &exit_status, 0);
+        if (!WIFEXITED(exit_status)) {
+            Log(@"[!] Failed to kill cfprefsd: %d\n", WEXITSTATUS(exit_status));
+            return -1;
+        }
+        sync();
+        usleep(100000);
+        
+        Log(@"[i] Flushing uicache...");
+        posix_spawn(&pid, "/usr/bin/uicache", 0, 0, (char**)&(const char*[]){"/usr/bin/uicache", NULL}, NULL);
+        waitpid(pid, &exit_status, 0);
+        if (!WIFEXITED(exit_status)) {
+            Log(@"[!] Failed to flush uicache: %d\n", WEXITSTATUS(exit_status));
+            return -1;
+        }
+    }
+
     if (access("/.installed_wtfis", F_OK) == 0) {
         Log(@"[i] Looks like bootstrap is already installed.");
         return 0;
@@ -266,7 +309,7 @@ int jailbreak(mach_port_t tfp0, uint64_t slide, uint64_t our_task_addr) {
     pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_ICHDB_1(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);
     pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_ICHDB_2(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);
     pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_mapIO(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);//0xFFFFFF8002F2AEEC;
-    pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_sbtrace(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);//0xFFFFFF8002C2A75C;
+    //pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_sbtrace(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);//0xFFFFFF8002C2A75C;
     pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_pmap_location(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);
     pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_phys_addr(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);
     pf_array[cnt++] = KERNEL_BASE_ADDRESS + slide + find_get_root(KERNEL_BASE_ADDRESS, full_kern, KERN_DUMP_SIZE);
