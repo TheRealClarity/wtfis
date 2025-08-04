@@ -88,6 +88,7 @@ void add_sbshowapp(void)
 }
 
 int check_bootstrap(void) {
+#ifndef UNTETHER
     if (!check_sbshowapp()) {
         Log(@"[!] Updating SBShowNonDefaultApps...");
         add_sbshowapp();
@@ -113,6 +114,7 @@ int check_bootstrap(void) {
             return -1;
         }
     }
+#endif
 
     if (access("/.installed_wtfis", F_OK) == 0) {
         Log(@"[i] Looks like bootstrap is already installed.");
